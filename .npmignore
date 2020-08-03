@@ -6,6 +6,6 @@
 dist
 example
 template.ejs
-tsconfig.json
+tsconfig*.json
 webpack
 yarn.lock
