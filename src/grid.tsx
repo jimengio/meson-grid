@@ -13,16 +13,24 @@ interface IMesonGridConfigs {
   padding: number | number[];
 }
 
-interface GridItem {
+interface IGridItem {
   name: string;
   from: [number, number];
   span: [number, number];
-  overwritePosition?: (config: any) => CSSProperties;
+  /** custom style */
+  calculateCustomStyle?: (config: IMesonGridConfigs, size: { w: number; h: number }, item: IGridItem, generatedStyle: CSSProperties) => CSSProperties;
   className?: string;
   style?: CSSProperties;
 }
 
-let MesonGrid: FC<{ className?: string; configs: IMesonGridConfigs; items: GridItem[]; components: { [k: string]: ReactNode } }> = React.memo((props) => {
+let MesonGrid: FC<{
+  className?: string;
+  configs: IMesonGridConfigs;
+  items: IGridItem[];
+  /** show guidelines, do not enabled this in production */
+  showGuideLines?: boolean;
+  components: { [k: string]: ReactNode };
+}> = React.memo((props) => {
   let [contentSize, setContentSize] = useState({
     w: 0,
     h: 0,
@@ -49,6 +57,67 @@ let MesonGrid: FC<{ className?: string; configs: IMesonGridConfigs; items: GridI
   let columnUnit = (contentSize.w + columnGap) / configs.sizes[0] - columnGap;
   let rowUnit = (contentSize.h + rowGap) / configs.sizes[1] - rowGap;
 
+  let renderGrids = () => {
+    return props.items.map((item, idx) => {
+      let left = (columnUnit + columnGap) * item.from[0];
+      let top = (rowUnit + rowGap) * item.from[1];
+      let width = (columnUnit + columnGap) * item.span[0] - columnGap;
+      let height = (rowUnit + rowGap) * item.span[1] - rowGap;
+
+      if (item.from[0] + item.span[0] > configs.sizes[0]) {
+        console.warn("succeeded in x direction", item, configs);
+      }
+      if (item.from[1] + item.span[1] > configs.sizes[1]) {
+        console.warn("succeeded in y direction", item, configs);
+      }
+
+      let computedStyle: CSSProperties = Object.assign({ top, left, width, height }, item.style);
+
+      if (item.calculateCustomStyle != null) {
+        computedStyle = item.calculateCustomStyle(props.configs, contentSize, item, computedStyle);
+      }
+
+      return (
+        <div className={cx(styleCard, item.className)} key={idx} style={computedStyle}>
+          {props.components[item.name] || (
+            <span className={styleMissing}>
+              No component for {JSON.stringify(item.name)} among {JSON.stringify(Object.keys(props.components))}
+            </span>
+          )}
+        </div>
+      );
+    });
+  };
+
+  let renderDebugArea = () => {
+    return (
+      <>
+        {Array.from({ length: configs.sizes[0] }, (_, idx) => {
+          let left = (columnUnit + columnGap) * idx;
+          let top = 0;
+          let width = columnUnit;
+          let height = contentSize.h;
+          return (
+            <div key={`h-${idx}`} style={{ left, top, width, height }} className={styleYDebug}>
+              {idx}
+            </div>
+          );
+        })}
+        {Array.from({ length: configs.sizes[1] }, (_, idx) => {
+          let left = 0;
+          let top = (rowUnit + rowGap) * idx;
+          let width = contentSize.w;
+          let height = rowUnit;
+          return (
+            <div key={`w-${idx}`} style={{ left, top, width, height }} className={styleXDebug}>
+              {idx}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <div
       className={cx(styleContainer, props.className)}
@@ -58,31 +127,12 @@ let MesonGrid: FC<{ className?: string; configs: IMesonGridConfigs; items: GridI
       }}
     >
       <div className={cx(fullHeight, styleContent)} ref={contentRef}>
-        {finishedLayout
-          ? props.items.map((item, idx) => {
-              let left = (columnUnit + columnGap) * item.from[0];
-              let top = (rowUnit + rowGap) * item.from[1];
-              let width = (columnUnit + columnGap) * item.span[0] - columnGap;
-              let height = (rowUnit + rowGap) * item.span[1] - rowGap;
-
-              if (item.from[0] + item.span[0] > configs.sizes[0]) {
-                console.warn("succeeded in x direction", item, configs);
-              }
-              if (item.from[1] + item.span[1] > configs.sizes[1]) {
-                console.warn("succeeded in y direction", item, configs);
-              }
-
-              return (
-                <div className={cx(styleCard, item.className)} key={idx} style={Object.assign({ top, left, width, height }, item.style)}>
-                  {props.components[item.name] || (
-                    <span className={styleMissing}>
-                      No component for {JSON.stringify(item.name)} among {JSON.stringify(Object.keys(props.components))}
-                    </span>
-                  )}
-                </div>
-              );
-            })
-          : null}
+        {finishedLayout ? (
+          <>
+            {renderGrids()}
+            {props.showGuideLines ? renderDebugArea() : null}
+          </>
+        ) : null}
       </div>
     </div>
   );
@@ -104,4 +154,18 @@ let styleCard = css`
 
 let styleMissing = css`
   color: hsla(357, 91%, 55%, 1);
+`;
+
+let styleXDebug = css`
+  border: 1px dashed hsla(220, 100%, 50%, 0.4);
+  border-width: 1px 0px;
+  color: hsla(220, 100%, 50%, 0.2);
+  position: absolute;
+`;
+
+let styleYDebug = css`
+  border: 1px dashed hsla(220, 100%, 50%, 0.4);
+  border-width: 0px 1px;
+  position: absolute;
+  color: hsla(220, 100%, 50%, 0.2);
 `;

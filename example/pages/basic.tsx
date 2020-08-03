@@ -21,11 +21,23 @@ let PageBasic: FC<{ className?: string }> = React.memo((props) => {
           className={styleArea}
           configs={{ sizes: [6, 6], gap: 12, padding: [12, 16] }}
           items={[
-            { name: EGridItem.a, from: [0, 0], span: [2, 1] },
+            { name: EGridItem.a, from: [0, 0], span: [2, 2] },
             { name: EGridItem.a, from: [2, 0], span: [4, 1] },
             { name: EGridItem.b, from: [2, 1], span: [2, 2] },
             { name: EGridItem.b, from: [0, 2], span: [2, 2] },
-            { name: EGridItem.b, from: [0, 2], span: [2, 2] },
+            {
+              name: EGridItem.b,
+              from: [2, 3],
+              span: [2, 2],
+              calculateCustomStyle: () => {
+                return {
+                  left: 340,
+                  top: 240,
+                  width: 300,
+                  height: 100,
+                };
+              },
+            },
           ]}
           components={{
             [EGridItem.a]: (
@@ -39,6 +51,7 @@ let PageBasic: FC<{ className?: string }> = React.memo((props) => {
               </div>
             ),
           }}
+          showGuideLines
         />
       </DocDemo>
     </div>
@@ -49,9 +62,4 @@ export default PageBasic;
 
 let styleArea = css`
   height: 400px;
-
-  box-shadow: 0 0 1px hsl(0, 0%, 50%);
-  * {
-    box-shadow: 0 0 1px hsl(0, 0%, 50%);
-  }
 `;
