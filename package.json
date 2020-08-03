@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@jimengio/ruled-router": "^0.2.26",
+    "@rehooks/component-size": "^1.0.3",
     "dayjs": "^1.8.31",
     "emotion": "^10.0.27",
     "font-awesome": "^4.7.0",

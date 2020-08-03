@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, CSSProperties, useState, useRef, useEffect } from "react";
 import { css, cx } from "emotion";
 import { fullHeight } from "@jimengio/flex-styles";
+import useComponentSize from "@rehooks/component-size";
 
 interface IMesonGridConfigs {
   sizes: [number, number];
@@ -9,8 +10,6 @@ interface IMesonGridConfigs {
   xGap?: number;
   /** gap in Y direction */
   yGap?: number;
-  /** number, or [top, right, bottom, right] */
-  padding: number | number[];
 }
 
 interface IGridItem {
@@ -18,7 +17,12 @@ interface IGridItem {
   from: [number, number];
   span: [number, number];
   /** custom style */
-  calculateCustomStyle?: (config: IMesonGridConfigs, size: { w: number; h: number }, item: IGridItem, generatedStyle: CSSProperties) => CSSProperties;
+  calculateCustomStyle?: (
+    configs: IMesonGridConfigs,
+    containerSize: { width: number; height: number },
+    item: IGridItem,
+    generatedStyle: CSSProperties
+  ) => CSSProperties;
   className?: string;
   style?: CSSProperties;
 }
@@ -31,22 +35,12 @@ let MesonGrid: FC<{
   showGuideLines?: boolean;
   components: { [k: string]: ReactNode };
 }> = React.memo((props) => {
-  let [contentSize, setContentSize] = useState({
-    w: 0,
-    h: 0,
-  });
-  let [finishedLayout, setFinishedLayout] = useState(false);
   let contentRef = useRef<HTMLDivElement>();
+  let contentSize = useComponentSize(contentRef);
 
   /** Plugins */
   /** Methods */
   /** Effects */
-
-  useEffect(() => {
-    let rect = contentRef.current.getBoundingClientRect();
-    setContentSize({ w: rect.width, h: rect.height });
-    setFinishedLayout(true);
-  }, []);
 
   /** Renderers */
 
@@ -54,8 +48,8 @@ let MesonGrid: FC<{
 
   let columnGap = configs.xGap || configs.gap;
   let rowGap = configs.yGap || configs.gap;
-  let columnUnit = (contentSize.w + columnGap) / configs.sizes[0] - columnGap;
-  let rowUnit = (contentSize.h + rowGap) / configs.sizes[1] - rowGap;
+  let columnUnit = (contentSize.width + columnGap) / configs.sizes[0] - columnGap;
+  let rowUnit = (contentSize.height + rowGap) / configs.sizes[1] - rowGap;
 
   let renderGrids = () => {
     return props.items.map((item, idx) => {
@@ -96,7 +90,7 @@ let MesonGrid: FC<{
           let left = (columnUnit + columnGap) * idx;
           let top = 0;
           let width = columnUnit;
-          let height = contentSize.h;
+          let height = contentSize.height;
           return (
             <div key={`h-${idx}`} style={{ left, top, width, height }} className={styleYDebug}>
               {idx}
@@ -106,7 +100,7 @@ let MesonGrid: FC<{
         {Array.from({ length: configs.sizes[1] }, (_, idx) => {
           let left = 0;
           let top = (rowUnit + rowGap) * idx;
-          let width = contentSize.w;
+          let width = contentSize.width;
           let height = rowUnit;
           return (
             <div key={`w-${idx}`} style={{ left, top, width, height }} className={styleXDebug}>
@@ -119,15 +113,9 @@ let MesonGrid: FC<{
   };
 
   return (
-    <div
-      className={cx(styleContainer, props.className)}
-      data-area="meson-grid"
-      style={{
-        padding: Array.isArray(configs.padding) ? configs.padding.map((x) => `${x}px`).join(" ") : configs.padding,
-      }}
-    >
+    <div className={cx(styleContainer, props.className)} data-area="meson-grid">
       <div className={cx(fullHeight, styleContent)} ref={contentRef}>
-        {finishedLayout ? (
+        {contentSize.width ? (
           <>
             {renderGrids()}
             {props.showGuideLines ? renderDebugArea() : null}

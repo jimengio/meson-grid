@@ -9,7 +9,7 @@ enum EGridItem {
   b = "b",
 }
 
-let PageBasic: FC<{ className?: string }> = React.memo((props) => {
+let PageCalculateStyle: FC<{ className?: string }> = React.memo((props) => {
   let [showLines, setShowLines] = useState(false);
 
   /** Plugins */
@@ -51,7 +51,14 @@ let PageBasic: FC<{ className?: string }> = React.memo((props) => {
             { name: EGridItem.a, from: [2, 0], span: [4, 1] },
             { name: EGridItem.b, from: [2, 1], span: [2, 2] },
             { name: EGridItem.b, from: [0, 2], span: [2, 2] },
-            { name: EGridItem.b, from: [2, 3], span: [2, 2] },
+            {
+              name: EGridItem.b,
+              from: [2, 3],
+              span: [2, 2],
+              calculateCustomStyle: (configs, containerSize, item, genStyle) => {
+                return { left: 340, top: 240, width: 300, height: 100 };
+              },
+            },
           ]}
           components={{
             [EGridItem.a]: elementA,
@@ -64,44 +71,28 @@ let PageBasic: FC<{ className?: string }> = React.memo((props) => {
   );
 });
 
-export default PageBasic;
+export default PageCalculateStyle;
 
 let styleArea = css`
   height: 400px;
   padding: 12px 16px;
 `;
 
+let code = `
+{
+  name: EGridItem.b,
+  from: [2, 3],
+  span: [2, 2],
+  calculateCustomStyle: (configs, containerSize, item, genStyle) => {
+    return { left: 340, top: 240, width: 300, height: 100 };
+  },
+},
+`;
+
 let styleDemo = css`
   max-width: unset;
 `;
 
-let code = `
-<MesonGrid
-  className={styleArea}
-  configs={{
-    // 设定栅格宽/高的大小
-    sizes: [6, 6],
-    // 也可以用 xGap, yGap 分别设定
-    gap: 12,
-  }}
-  // 位置处理
-  items={[
-    { name: "a", from: [0, 0], span: [2, 2] },
-    { name: "a", from: [2, 0], span: [4, 1] },
-    { name: "b", from: [2, 1], span: [2, 2] },
-    { name: "b", from: [0, 2], span: [2, 2] },
-    { name: "b", from: [2, 3], span: [2, 2] },
-  ]}
-  // 注册组件
-  components={{
-    a: elementA,
-    b: elementB,
-  }}
-  // 开发环境可以打开参考线方便调试
-  showGuideLines={showLines}
-/>
-`;
-
 let content = `
-MesonGrid 提供简单的表格布局的方案, 通过配置位置将组件渲染在界面上.
+特殊的布局需要通过 calculateCustomStyle 自行定义.
 `;
