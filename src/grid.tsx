@@ -92,7 +92,7 @@ let MesonGrid: FC<{
           let width = columnUnit;
           let height = contentSize.height;
           return (
-            <div key={`h-${idx}`} style={{ left, top, width, height }} className={styleYDebug}>
+            <div key={`h-${idx}`} style={{ left, top, width, height }} className={cx(styleDebug, styleYDebug)}>
               {idx}
             </div>
           );
@@ -103,7 +103,7 @@ let MesonGrid: FC<{
           let width = contentSize.width;
           let height = rowUnit;
           return (
-            <div key={`w-${idx}`} style={{ left, top, width, height }} className={styleXDebug}>
+            <div key={`w-${idx}`} style={{ left, top, width, height }} className={cx(styleDebug, styleXDebug)}>
               {idx}
             </div>
           );
@@ -144,16 +144,17 @@ let styleMissing = css`
   color: hsla(357, 91%, 55%, 1);
 `;
 
-let styleXDebug = css`
+let styleDebug = css`
   border: 1px dashed hsla(220, 100%, 50%, 0.4);
-  border-width: 1px 0px;
   color: hsla(220, 100%, 50%, 0.2);
   position: absolute;
+  pointer-events: none;
+`;
+
+let styleXDebug = css`
+  border-width: 1px 0px;
 `;
 
 let styleYDebug = css`
-  border: 1px dashed hsla(220, 100%, 50%, 0.4);
   border-width: 0px 1px;
-  position: absolute;
-  color: hsla(220, 100%, 50%, 0.2);
 `;
