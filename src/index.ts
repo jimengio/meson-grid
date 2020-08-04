@@ -1,1 +1,1 @@
-export { default as MesonGrid } from "./grid";
+export { default as MesonGrid, IMesonGridItem } from "./grid";

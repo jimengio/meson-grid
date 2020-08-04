@@ -1,8 +1,8 @@
 {
   "name": "@jimengio/meson-grid",
-  "version": "0.1.0-a3",
+  "version": "0.1.0-a4",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "dev": "webpack-dev-server --hot --config webpack/dev.js",
     "watch": "webpack-dev-server --hot --config webpack/dev.js",

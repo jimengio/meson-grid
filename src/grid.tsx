@@ -12,7 +12,7 @@ interface IMesonGridConfigs {
   yGap?: number;
 }
 
-interface IGridItem {
+export interface IMesonGridItem {
   name: string;
   from: [number, number];
   span: [number, number];
@@ -20,7 +20,7 @@ interface IGridItem {
   calculateCustomStyle?: (
     configs: IMesonGridConfigs,
     containerSize: { width: number; height: number },
-    item: IGridItem,
+    item: IMesonGridItem,
     generatedStyle: CSSProperties
   ) => CSSProperties;
   className?: string;
@@ -30,9 +30,10 @@ interface IGridItem {
 let MesonGrid: FC<{
   className?: string;
   configs: IMesonGridConfigs;
-  items: IGridItem[];
+  items: IMesonGridItem[];
   /** show guidelines, do not enabled this in production */
   showGuideLines?: boolean;
+  guideLinesClassName?: string;
   components: { [k: string]: ReactNode };
 }> = React.memo((props) => {
   let contentRef = useRef<HTMLDivElement>();
@@ -92,7 +93,7 @@ let MesonGrid: FC<{
           let width = columnUnit;
           let height = contentSize.height;
           return (
-            <div key={`h-${idx}`} style={{ left, top, width, height }} className={cx(styleDebug, styleYDebug)}>
+            <div key={`h-${idx}`} style={{ left, top, width, height }} className={cx(styleDebug, props.guideLinesClassName, styleYDebug)}>
               {idx}
             </div>
           );
@@ -103,7 +104,7 @@ let MesonGrid: FC<{
           let width = contentSize.width;
           let height = rowUnit;
           return (
-            <div key={`w-${idx}`} style={{ left, top, width, height }} className={cx(styleDebug, styleXDebug)}>
+            <div key={`w-${idx}`} style={{ left, top, width, height }} className={cx(styleDebug, props.guideLinesClassName, styleXDebug)}>
               {idx}
             </div>
           );

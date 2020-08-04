@@ -58,6 +58,7 @@ let PageBasic: FC<{ className?: string }> = React.memo((props) => {
             [EGridItem.b]: elementB,
           }}
           showGuideLines={showLines}
+          guideLinesClassName={styleGuides}
         />
       </DocDemo>
     </div>
@@ -99,9 +100,15 @@ let code = `
   }}
   // 开发环境可以打开参考线方便调试
   showGuideLines={showLines}
+  guideLinesClassName={styleGuides}
 />
 `;
 
 let content = `
 MesonGrid 提供简单的表格布局的方案, 通过配置位置将组件渲染在界面上.
+`;
+
+let styleGuides = css`
+  /* color: blue;
+  border-color: blue; */
 `;
