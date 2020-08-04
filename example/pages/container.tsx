@@ -5,17 +5,26 @@ import { fullscreen, row, expand } from "@jimengio/flex-styles";
 import { HashRedirect, findRouteTarget } from "@jimengio/ruled-router/lib/dom";
 import { genRouter, GenRouterTypeMain } from "controller/generated-router";
 import { ISidebarEntry, DocSidebar } from "@jimengio/doc-frame";
+import PageBasic from "./basic";
+import PageCalculateStyle from "./calculate-style";
 
 let items: ISidebarEntry[] = [
   {
-    title: "Intro",
+    title: "Basic",
     path: genRouter.$.name,
+  },
+  {
+    title: "Calculate Styles",
+    path: genRouter.calculateStyle.name,
   },
 ];
 
 const renderChildPage = (routerTree: GenRouterTypeMain) => {
   switch (routerTree?.name) {
     case "home":
+      return <PageBasic />;
+    case "calculate-style":
+      return <PageCalculateStyle />;
     default:
       return <HashRedirect to={genRouter.$.path()} noDelay />;
   }
@@ -37,7 +46,7 @@ let Container: FC<{ router: GenRouterTypeMain }> = React.memo((props) => {
   return (
     <div className={cx(fullscreen, row, styleContainer)}>
       <DocSidebar
-        title="Workflow"
+        title="Meson Grid"
         currentPath={props.router.name}
         onSwitch={(item) => {
           onSwitchPage(item.path);

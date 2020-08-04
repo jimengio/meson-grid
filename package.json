@@ -1,6 +1,6 @@
 {
-  "name": "@jimengio/ts-workflow",
-  "version": "1.0.0",
+  "name": "@jimengio/meson-grid",
+  "version": "0.1.0-a2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,14 +10,14 @@
     "dll-release": "time webpack --config webpack/dll-release.js",
     "release": "rm -rfv dist/* && yarn dll-release && time webpack --config webpack/release.js",
     "build": "yarn release",
-    "compile": "tsc -d --project tsconfig-compile.json --outDir lib/",
+    "compile": "rm -rfv lib && tsc -d --project tsconfig-compile.json --outDir lib/",
     "upload": "rsync -avr --progress dist/ fe.jimu.io:~/repo/jimengio/ts-workflow",
     "gen-router": "ts-node -P tsconfig-node.json -r tsconfig-paths/register example/gen-router.ts",
     "postinstall": "rm -rfv node_modules/@types/*/node_modules/@types/react"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@jimengio/ci-progress-webpack-plugin": "^0.1.0",
     "@jimengio/doc-frame": "^0.1.12",
@@ -34,6 +34,7 @@
     "fork-ts-checker-webpack-plugin": "^5.0.13",
     "html-webpack-plugin": "^4.3.0",
     "html-webpack-tags-plugin": "^2.0.17",
+    "immer": "^7.0.7",
     "mini-css-extract-plugin": "^0.9.0",
     "prettier": "^2.0.5",
     "style-loader": "^1.2.1",
@@ -53,11 +54,8 @@
   },
   "dependencies": {
     "@jimengio/ruled-router": "^0.2.26",
-    "dayjs": "^1.8.31",
+    "@rehooks/component-size": "^1.0.3",
     "emotion": "^10.0.27",
-    "font-awesome": "^4.7.0",
-    "immer": "^7.0.7",
-    "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

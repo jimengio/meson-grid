@@ -12,9 +12,15 @@ function qsStringify(queries: { [k: string]: any }) {
 
 // generated
 
-// Generated with router-code-generator@0.2.6-a1
+// Generated with router-code-generator@0.2.7
 
 export let genRouter = {
+  calculateStyle: {
+    name: "calculate-style",
+    raw: "calculate-style",
+    path: () => `/calculate-style`,
+    go: () => switchPath(`/calculate-style`),
+  },
   $: {
     name: "home",
     raw: "",
@@ -23,9 +29,17 @@ export let genRouter = {
   },
 };
 
-export type GenRouterTypeMain = GenRouterTypeTree["$"];
+/** Deprecating, use GenRouterTypeTree["next"] instead */
+export type GenRouterTypeMain = GenRouterTypeTree["next"];
 
 export interface GenRouterTypeTree {
+  next: GenRouterTypeTree["calculateStyle"] | GenRouterTypeTree["$"];
+  calculateStyle: {
+    name: "calculate-style";
+    params: {};
+    query: {};
+    next: null;
+  };
   $: {
     name: "home";
     params: {};
