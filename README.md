@@ -6,6 +6,8 @@ http://fe.jimu.io/meson-grid/#/
 
 ### Usage
 
+![](https://img.shields.io/npm/v/@jimengio/meson-grid.svg?style=flat-square)
+
 ```bash
 yarn add @jimengio/meson-grid
 ```
