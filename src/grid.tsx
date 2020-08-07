@@ -29,6 +29,7 @@ export interface IMesonGridItem {
 
 let MesonGrid: FC<{
   className?: string;
+  style?: CSSProperties;
   configs: IMesonGridConfigs;
   items: IMesonGridItem[];
   /** show guidelines, do not enabled this in production */
@@ -114,7 +115,7 @@ let MesonGrid: FC<{
   };
 
   return (
-    <div className={cx(styleContainer, props.className)} data-area="meson-grid">
+    <div className={cx(styleContainer, props.className)} style={props.style} data-area="meson-grid">
       <div className={cx(fullHeight, styleContent)} ref={contentRef}>
         {contentSize.width ? (
           <>
