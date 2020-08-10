@@ -151,6 +151,7 @@ let styleDebug = css`
   color: hsla(220, 100%, 50%, 0.2);
   position: absolute;
   pointer-events: none;
+  user-select: none;
 `;
 
 let styleXDebug = css`

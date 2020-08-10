@@ -1,6 +1,6 @@
 {
   "name": "@jimengio/meson-grid",
-  "version": "0.1.0-a5",
+  "version": "0.1.0",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
